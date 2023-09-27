@@ -11,9 +11,20 @@ public class Slingshot : MonoBehaviour
     public GameObject projectile; // b
     public bool aimingMode; // b
     private Rigidbody projectileRigidbody;
+    static private Slingshot S;
+
+    static public Vector3 LAUNCH_POS
+    { // b
+        get
+        {
+            if (S == null) return Vector3.zero;
+            return S.launchPos;
+        }
+    }
 
     void Awake()
     {
+        S = this;
         Transform launchPointTrans = transform.Find("LaunchPoint"); // a
         launchPoint = launchPointTrans.gameObject;
         launchPoint.SetActive(false); // b
@@ -70,6 +81,8 @@ public class Slingshot : MonoBehaviour
             projectileRigidbody.velocity = -mouseDelta * velocityMult;
             FollowCam.POI = projectile;
             projectile = null;
+            MissionDemolition.ShotFired(); // a
+            ProjectileLine.S.poi = projectile;
         }
     }
 }
